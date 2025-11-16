@@ -13,8 +13,8 @@
             <img src="https://i.pinimg.com/736x/1a/17/ed/1a17ed134ffeb3461f5d0f3ca0ee227d.jpg" alt="Zomato Logo">
         </div>
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="Search restaurants..." onkeyup="searchRestaurants()">
-            <button class="search-btn" onclick="searchRestaurants()">🔍</button>
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search restaurants or items..." onkeyup="handleSearch()">
+            <button class="search-btn" onclick="handleSearch()">🔍</button>
         </div>
         <div class="header-right">
             <button class="cart-icon-btn" onclick="showCartFromMenu()" title="View Cart">
@@ -23,7 +23,7 @@
             </button>
             <nav>
                 <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="#" onclick="handleHomeClick(event)">Home</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Service</a></li>
                     <li><a href="#">Contact</a></li>
@@ -49,15 +49,22 @@
             <button class="btn back-btn" onclick="goHome()">Back to Home</button>
         </section>
 
+        <!-- Search Results Page -->
+        <section id="searchResultsPage" style="display: none;">
+            <div class="search-results-header">
+                <button class="btn back-btn" onclick="goHome()">← Back to Home</button>
+                <h2 id="searchResultsTitle">Search Results</h2>
+            </div>
+            <div id="searchResultsContainer" class="search-results-content">
+                <!-- Search results will be loaded here by JavaScript -->
+            </div>
+        </section>
+
         <!-- Restaurant Details Page -->
         <section id="restaurantDetailsPage" style="display: none;">
             <div class="details-header">
                 <button class="btn back-btn" onclick="goBackToRestaurants()">← Back to Restaurants</button>
                 <h2 id="restaurantDetailsTitle"></h2>
-            </div>
-            <div class="menu-search-container">
-                <input type="text" id="menuSearchInput" class="menu-search-bar" placeholder="Search items..." onkeyup="searchMenuItems()">
-                <button class="menu-search-btn" onclick="searchMenuItems()">🔍</button>
             </div>
             <div id="menuContainer" class="menu-grid">
                 <!-- Menu items will be loaded here by JavaScript -->

@@ -43,6 +43,16 @@ function goHome() {
     document.getElementById('restaurantPage').style.display = 'none';
 }
 
+// Handle Home link click - show restaurants page
+function handleHomeClick(event) {
+    event.preventDefault();
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('restaurantPage').style.display = 'block';
+    document.getElementById('restaurantDetailsPage').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'none';
+    displayRestaurants();
+}
+
 // Display restaurants in grid
 function displayRestaurants() {
     const container = document.getElementById('restaurantContainer');
@@ -76,7 +86,6 @@ function showRestaurantDetails(restaurantId) {
     
     const restaurant = restaurants.find(r => r.id === restaurantId);
     document.getElementById('restaurantDetailsTitle').textContent = restaurant.name;
-    document.getElementById('menuSearchInput').value = '';
     
     displayMenuItems(restaurantId);
 }
@@ -138,8 +147,30 @@ function addToCart(itemName, price, image) {
     // Save cart to localStorage
     saveCart();
     
-    // Navigate to cart page automatically
-    showCart();
+    // Show a simple notification
+    showAddToCartNotification(itemName);
+}
+
+// Show notification when item is added to cart
+function showAddToCartNotification(itemName) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'add-to-cart-notification';
+    notification.textContent = `✓ ${itemName} added to cart`;
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    // Remove notification after 2 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 2000);
 }
 
 // Show cart page
@@ -242,6 +273,7 @@ function showCartFromMenu() {
         alert('Your cart is empty! Add items first.');
         return;
     }
+    // Hide all other pages
     document.getElementById('restaurantDetailsPage').style.display = 'none';
     document.getElementById('restaurantPage').style.display = 'none';
     document.getElementById('homePage').style.display = 'none';
@@ -321,47 +353,125 @@ function searchRestaurants() {
     });
 }
 
-// Search functionality for menu items
-function searchMenuItems() {
-    const searchInput = document.getElementById('menuSearchInput').value.toLowerCase();
-    const container = document.getElementById('menuContainer');
+// Handle combined search for restaurants and menu items
+function handleSearch() {
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
     
-    // If search input is empty, show all items
+    // If search input is empty, show restaurants page
     if (searchInput === '') {
-        displayMenuItems(currentRestaurantId);
+        document.getElementById('searchResultsPage').style.display = 'none';
+        document.getElementById('restaurantPage').style.display = 'block';
+        document.getElementById('homePage').style.display = 'none';
+        displayRestaurants();
         return;
     }
     
-    // Filter menu items based on search input
-    const items = menuItems[currentRestaurantId];
-    const filteredItems = items.filter(item =>
-        item.name.toLowerCase().includes(searchInput)
+    // Search for restaurants
+    const filteredRestaurants = restaurants.filter(restaurant =>
+        restaurant.name.toLowerCase().includes(searchInput)
     );
     
-    // Display filtered items
+    // Search for menu items across all restaurants
+    const filteredItems = [];
+    Object.keys(menuItems).forEach(restaurantId => {
+        const items = menuItems[restaurantId];
+        items.forEach(item => {
+            if (item.name.toLowerCase().includes(searchInput)) {
+                const restaurant = restaurants.find(r => r.id === parseInt(restaurantId));
+                filteredItems.push({
+                    ...item,
+                    restaurantId: parseInt(restaurantId),
+                    restaurantName: restaurant.name,
+                    restaurantImage: restaurant.image
+                });
+            }
+        });
+    });
+    
+    // Display search results
+    displaySearchResults(filteredRestaurants, filteredItems, searchInput);
+}
+
+// Display search results
+function displaySearchResults(restaurants, items, searchQuery) {
+    // Hide other pages
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('restaurantPage').style.display = 'none';
+    document.getElementById('restaurantDetailsPage').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'none';
+    document.getElementById('searchResultsPage').style.display = 'block';
+    
+    document.getElementById('searchResultsTitle').textContent = `Search Results for "${searchQuery}"`;
+    const container = document.getElementById('searchResultsContainer');
     container.innerHTML = '';
     
-    if (filteredItems.length === 0) {
-        container.innerHTML = '<div class="no-results"><p>No items found matching your search</p></div>';
-        return;
+    // Display restaurants section
+    if (restaurants.length > 0) {
+        const restaurantsSection = document.createElement('div');
+        restaurantsSection.className = 'search-section';
+        restaurantsSection.innerHTML = '<h3>Restaurants</h3>';
+        
+        const restaurantsGrid = document.createElement('div');
+        restaurantsGrid.className = 'restaurant-grid';
+        
+        restaurants.forEach(restaurant => {
+            const restaurantCard = document.createElement('div');
+            restaurantCard.className = 'restaurant-card';
+            restaurantCard.onclick = () => showRestaurantDetails(restaurant.id);
+            restaurantCard.innerHTML = `
+                <div class="restaurant-image">
+                    <img src="${restaurant.image}" alt="${restaurant.name}">
+                </div>
+                <div class="restaurant-info">
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
+                    <div class="restaurant-rating">
+                        <span class="stars">★ ${restaurant.rating}</span>
+                        <span class="reviews">(${restaurant.reviews} reviews)</span>
+                    </div>
+                </div>
+            `;
+            restaurantsGrid.appendChild(restaurantCard);
+        });
+        
+        restaurantsSection.appendChild(restaurantsGrid);
+        container.appendChild(restaurantsSection);
     }
     
-    filteredItems.forEach(item => {
-        const itemCard = document.createElement('div');
-        itemCard.className = 'item-card';
-        itemCard.innerHTML = `
-            <div class="item-image">
-                <img src="${item.image}" alt="${item.name}">
-            </div>
-            <div class="item-details">
-                <h3 class="item-name">${item.name}</h3>
-                <p class="item-price">₹${item.price}</p>
-                <div class="item-rating">
-                    <span class="item-stars">★ ${item.rating}</span>
+    // Display menu items section
+    if (items.length > 0) {
+        const itemsSection = document.createElement('div');
+        itemsSection.className = 'search-section';
+        itemsSection.innerHTML = '<h3>Menu Items</h3>';
+        
+        const itemsGrid = document.createElement('div');
+        itemsGrid.className = 'menu-grid';
+        
+        items.forEach(item => {
+            const itemCard = document.createElement('div');
+            itemCard.className = 'item-card search-item-card';
+            itemCard.innerHTML = `
+                <div class="item-image">
+                    <img src="${item.image}" alt="${item.name}">
                 </div>
-                <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, '${item.image}')">Add to Cart</button>
-            </div>
-        `;
-        container.appendChild(itemCard);
-    });
+                <div class="item-details">
+                    <h3 class="item-name">${item.name}</h3>
+                    <p class="item-restaurant">From ${item.restaurantName}</p>
+                    <p class="item-price">₹${item.price}</p>
+                    <div class="item-rating">
+                        <span class="item-stars">★ ${item.rating}</span>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price}, '${item.image}')">Add to Cart</button>
+                </div>
+            `;
+            itemsGrid.appendChild(itemCard);
+        });
+        
+        itemsSection.appendChild(itemsGrid);
+        container.appendChild(itemsSection);
+    }
+    
+    // If no results found
+    if (restaurants.length === 0 && items.length === 0) {
+        container.innerHTML = '<div class="no-results"><p>No restaurants or items found matching your search</p></div>';
+    }
 }
