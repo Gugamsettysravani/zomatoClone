@@ -1,5 +1,3 @@
-// Mock data for restaurants and menu items
-// This file contains all the mock data for the Zomato clone application
 
 // Restaurant data
 const restaurants = [

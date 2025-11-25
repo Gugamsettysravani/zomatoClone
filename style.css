@@ -231,17 +231,18 @@ footer p {
 /* Responsive Design */
 @media (max-width: 768px) {
     header {
-        flex-direction: column;
+        /* flex-direction: column; */
+        flex-direction: row;
         gap: 1rem;
     }
 
     .search-container {
         margin: 0;
-        width: 100%;
+        width: 50%;
     }
 
     .search-bar {
-        max-width: 100%;
+        max-width: 50%;
     }
 
     .header-right {
@@ -271,7 +272,7 @@ footer p {
 @media (max-width: 480px) {
     header {
         padding: 1rem;
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.5rem;
     }
 
@@ -282,11 +283,11 @@ footer p {
 
     .search-container {
         margin: 0.5rem 0;
-        width: 100%;
+        width: 50%;
     }
 
     .search-bar {
-        max-width: 100%;
+        max-width: 50%;
         padding: 0.6rem 0.8rem;
         font-size: 0.85rem;
     }
@@ -1027,39 +1028,38 @@ footer p {
     }
 }
 /* HAMBURGER ICON */
-.hamburger {
-    display: none;
-    font-size: 28px;
-    cursor: pointer;
-    padding: 8px;
+ /* Hide menu on small screens */
+#navMenu {
+  display: flex; /* default for large screens */
 }
 
+/* Hamburger only visible on small screens */
+.hamburger {
+  display: none;
+}
 
-@media (max-width: 768px) {
-    .header-right {
-        display: none;
-        flex-direction: row;
-        background: white;
-        position: absolute;
-        top: 70px;
-        right: 10px;
-        width: 200px;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        
-    }
+@media (max-width:768px) {
+  #navMenu {
+    display: none;        /* hide menu initially */
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color:#d63f4e;
+    position: absolute;
+    top: 70px;            /* adjust based on header height */
+    right: 0;
+    width: 120px;
+    padding: 10px;
+    z-index: 10;
+  }
 
-    .header-right.active {
-        display: flex;
-    }
+  #navMenu.show {
+    display: flex;        /* show when toggled */
+  }
 
-    .hamburger {
-        display: block;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 10px;
-    }
+  .hamburger {
+    display: block;       /* show hamburger on small screens */
+    font-size: 30px;
+    cursor: pointer;
+  }
 }

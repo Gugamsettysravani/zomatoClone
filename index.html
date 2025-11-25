@@ -15,7 +15,7 @@
     <div class="logo">
         <img src="https://i.pinimg.com/736x/1a/17/ed/1a17ed134ffeb3461f5d0f3ca0ee227d.jpg" alt="Zomato Logo" />
     </div>
-
+      
     <div class="search-container">
         <input type="text" id="searchInput" class="search-bar" placeholder="Search restaurants or items..."
             onkeyup="handleSearch()" />
@@ -23,17 +23,15 @@
     </div>
 
     <!-- HAMBURGER ICON -->
-    <div class="hamburger" onclick="toggleMenu()">
-        ☰
-    </div>
-
+    <div class="hamburger" onclick="toggleMenu()"> ☰</div>
+    
     <div class="header-right" id="navMenu">
         <button class="cart-icon-btn" onclick="showCartFromMenu()" title="View Cart">
             🛒
             <span class="cart-count" id="cartCount">0</span>
         </button>
 
-        <nav>
+         <nav>
             <ul>
                 <li><a href="#" onclick="handleHomeClick(event)">Home</a></li>
                 <li><a href="#">About</a></li>
@@ -41,6 +39,7 @@
                 <li><a href="#">Contact</a></li>
             </ul>
         </nav>
+        
     </div>
 </header>
 

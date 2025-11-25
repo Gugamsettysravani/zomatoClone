@@ -1,35 +1,18 @@
-let cart = [];
-
+let cart=[];
 let currentRestaurantId = null;
 
-function initializeCart() {
-  const savedCart = localStorage.getItem("zomatoCart");
-  if (savedCart) {
-    try {
-      cart = JSON.parse(savedCart);
-      updateCartCount();
-    } catch (error) {
-      console.error("Error loading cart from localStorage:", error);
-      cart = [];
-    }
-  }
-}
-
-function saveCart() {
-  try {
-    localStorage.setItem("zomatoCart", JSON.stringify(cart));
-  } catch (error) {
-    console.error("Error saving cart to localStorage:", error);
-  }
-}
-
-window.addEventListener("DOMContentLoaded", initializeCart);
-
-// Handle Home link click - show restaurants page
+// Handle Home link click 
 function handleHomeClick(event) {
   event.preventDefault();
   showRestaurants();
 }
+function toggleMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.classList.toggle("show");
+}
+
+
+
 
 // Show restaurants page
 function showRestaurants() {
@@ -393,8 +376,26 @@ function checkout() {
 
   goHome();
 }
-
-function toggleMenu() {
-    const menu = document.getElementById("navMenu");
-    menu.classList.toggle("active");
+function initializeCart() {
+  const savedCart = localStorage.getItem("zomatoCart");
+  if (savedCart) {
+    try {
+      cart = JSON.parse(savedCart);
+      updateCartCount();
+    } catch (error) {
+      console.error("Error loading cart from localStorage:", error);
+      cart = [];
+    }
+  }
 }
+
+function saveCart() {
+  try {
+    localStorage.setItem("zomatoCart", JSON.stringify(cart));
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", initializeCart);
+
