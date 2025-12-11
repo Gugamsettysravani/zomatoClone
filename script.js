@@ -5,10 +5,17 @@ let currentRestaurantId = null;
 function handleHomeClick(event) {
   event.preventDefault();
   showRestaurants();
+  closeMenu();
 }
+
 function toggleMenu() {
     const menu = document.getElementById("navMenu");
     menu.classList.toggle("show");
+}
+
+function closeMenu() {
+    const menu = document.getElementById("navMenu");
+    menu.classList.remove("show");
 }
 
 
@@ -334,6 +341,7 @@ function showCartFromMenu() {
     alert("Your cart is empty! Add items first.");
     return;
   }
+  closeMenu();
   document.getElementById("homePage").style.display = "none";
   document.getElementById("restaurantPage").style.display = "none";
   document.getElementById("restaurantDetailsPage").style.display = "none";
@@ -398,4 +406,3 @@ function saveCart() {
 }
 
 window.addEventListener("DOMContentLoaded", initializeCart);
-
